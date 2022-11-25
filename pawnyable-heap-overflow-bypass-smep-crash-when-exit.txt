@@ -1,0 +1,70 @@
+[ Holstein v2 (KL01-2) - Pawnyable ]
+/ $ /exploit
+[*] saving user land state
+[*] spraying 50 tty_struct objects
+[+] /dev/holstein opened
+[*] spraying 50 tty_struct objects
+[*] leaking kernel base and g_buf with OOB read
+[+] leaked kernel base address: 0xffffffff98a00000
+[+] leaked g_buf address: 0xffff9edd41cf9000
+[*] crafting rop chain
+[*] overwriting the adjacent tty_struct
+[*] invoking ioctl to hijack control flow
+[+] returned to user land
+[+] got root (uid = 0)
+[*] spawning shell
+/ # id
+uid=0(root) gid=0(root)
+/ # exit
+BUG: unable to handle page fault for address: ffffffffdeadbeef
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0010) - not-present page
+PGD 340d067 P4D 340d067 PUD 340f067 PMD 0
+Oops: 0010 [#1] SMP NOPTI
+CPU: 0 PID: 162 Comm: exploit Tainted: G           O      5.15.0 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+RIP: 0010:0xffffffffdeadbeef
+Code: Unable to access opcode bytes at RIP 0xffffffffdeadbec5.
+RSP: 0018:ffffaec8c0187de8 EFLAGS: 00000202
+RAX: 00000000deadbeef RBX: ffff9edd41bc7e00 RCX: ffff9edd41cf95f8
+RDX: 0000000000000001 RSI: ffff9edd41bc7e00 RDI: ffff9edd41cf9400
+RBP: ffffaec8c0187e28 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000010 R11: 0000000000000215 R12: ffff9edd41cf9400
+R13: ffff9edd41cf9800 R14: ffff9edd41463d80 R15: ffff9edd412f32a0
+FS:  00000000004d13c0(0000) GS:ffff9edd43a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffdeadbec5 CR3: 000000000340a000 CR4: 00000000003006f0
+Call Trace:
+ ? tty_release+0x12a/0x450
+ __fput+0x89/0x250
+ ____fput+0x9/0x10
+ task_work_run+0x61/0xa0
+ do_exit+0x2dd/0x930
+ do_group_exit+0x36/0xa0
+ __x64_sys_exit_group+0x13/0x20
+ do_syscall_64+0x43/0x90
+ entry_SYSCALL_64_after_hwframe+0x44/0xae
+RIP: 0033:0x44f9b1
+Code: Unable to access opcode bytes at RIP 0x44f987.
+RSP: 002b:00007fff130ba500 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 00000000004cb290 RCX: 000000000044f9b1
+RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffffffffffffffb8 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 00000000004cb290
+R13: 0000000000000000 R14: 00000000004cbd80 R15: 00000000004021b0
+Modules linked in: vuln(O)
+CR2: ffffffffdeadbeef
+---[ end trace a6cf0a1451449127 ]---
+RIP: 0010:0xffffffffdeadbeef
+Code: Unable to access opcode bytes at RIP 0xffffffffdeadbec5.
+RSP: 0018:ffffaec8c0187de8 EFLAGS: 00000202
+RAX: 00000000deadbeef RBX: ffff9edd41bc7e00 RCX: ffff9edd41cf95f8
+RDX: 0000000000000001 RSI: ffff9edd41bc7e00 RDI: ffff9edd41cf9400
+RBP: ffffaec8c0187e28 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000010 R11: 0000000000000215 R12: ffff9edd41cf9400
+R13: ffff9edd41cf9800 R14: ffff9edd41463d80 R15: ffff9edd412f32a0
+FS:  00000000004d13c0(0000) GS:ffff9edd43a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffdeadbec5 CR3: 000000000340a000 CR4: 00000000003006f0
+Kernel panic - not syncing: Fatal exception
+Kernel Offset: 0x17a00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
